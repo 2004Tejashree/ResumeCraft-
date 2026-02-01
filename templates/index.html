@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ResumeCraft</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <div class="logo">
+                <span>ResumeCraft </span>
+            </div>
+            <div class="nav-links">
+                <a href="#" class="active" id="navHome">Home</a>
+                <a href="#uploadArea" id="navAnalyze">Analyze</a>
+                <a href="#batchUploadArea" id="navBatchMode">Batch Mode</a>
+                <a href="https://github.com/2004Tejashree" target="_blank" class="github-link">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <h1>ResumeCraft</h1>
+            <p>Professional resume insights and optimization.</p>
+        </div>
+
+        <div class="upload-section">
+            <div class="profession-select">
+                <label for="profession">Select Target Profession:</label>
+                <select id="profession" name="profession">
+                    <option value="software_developer">Software Developer</option>
+                    <option value="data_analyst">Data Analyst</option>
+                    <option value="data_scientist">Data Scientist</option>
+                    <option value="web_developer">Web Developer</option>
+                    <option value="devops_engineer">DevOps Engineer</option>
+                    <option value="business_analyst">Business Analyst</option>
+                    <option value="project_manager">Project Manager</option>
+                    <option value="marketing_specialist">Marketing Specialist</option>
+                    <option value="ui_ux_designer">UI/UX Designer</option>
+                    <option value="cybersecurity_analyst">Cybersecurity Analyst</option>
+                </select>
+            </div>
+
+            <div class="mode-toggle">
+                <button class="mode-btn active" id="singleModeBtn">Single Resume</button>
+                <button class="mode-btn" id="batchModeBtn">Batch Compare</button>
+            </div>
+
+            <!-- Single Resume Upload -->
+            <div id="singleUploadMode">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-icon"></div>
+                    <div class="upload-text">Drag & drop your resume here or click to browse</div>
+                    <div class="upload-subtext">Only PDF files are supported (max 16MB)</div>
+                    <input type="file" class="file-input" id="fileInput" accept=".pdf">
+                </div>
+                <button class="upload-btn" id="analyzeBtn" disabled>Analyze Resume</button>
+            </div>
+
+            <!-- Batch Upload Mode -->
+            <div class="batch-upload-area" id="batchUploadMode">
+                <div class="upload-area" id="batchUploadArea">
+                    <div class="upload-icon"></div>
+                    <div class="upload-text">Drag & drop multiple resumes here or click to browse</div>
+                    <div class="upload-subtext">Add up to 20 PDF files (max 16MB each)</div>
+                    <input type="file" class="file-input" id="batchFileInput" accept=".pdf" multiple>
+                </div>
+                <div class="batch-file-list" id="batchFileList" style="display: none;"></div>
+                <button class="upload-btn" id="batchAnalyzeBtn" disabled>Analyze All Resumes</button>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your resume with AI...</p>
+        </div>
+
+        <div class="error" id="error"></div>
+
+        <div class="results-section" id="results">
+            <div class="results-header">
+                <h2>Analysis Results</h2>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <h3> Candidate Information</h3>
+                    <p><strong>Name:</strong> <span id="candidateName">Unknown</span></p>
+                    <p><strong>Email:</strong> <span id="candidateEmail">Not found</span></p>
+                    <p><strong>Phone:</strong> <span id="candidatePhone">Not found</span></p>
+                </div>
+
+                <div class="result-card">
+                    <h3> Skills Found</h3>
+                    <div id="skillsList"></div>
+                </div>
+
+                <div class="result-card">
+                    <h3> Matched Skills</h3>
+                    <div id="matchedSkills"></div>
+                </div>
+
+                <div class="result-card">
+                    <h3> Missing Skills</h3>
+                    <div id="missingSkills"></div>
+                </div>
+            </div>
+
+            <div class="score-row">
+                <div class="score-left">
+                    <div class="score-card match-card-vertical">
+                        <h4>Match Score</h4>
+                        <div class="match-card">
+                            <div class="match-score" id="matchScore">--</div>
+                            <div class="progress-bar" aria-hidden="true">
+                                <div class="progress-fill" id="matchProgress" style="width:0%"></div>
+                            </div>
+                            <p class="small-text">Overall match percentage</p>
+                        </div>
+                    </div>
+
+                    <div class="score-card skills-card">
+                        <h4>Skills Match</h4>
+                        <div class="chart-card">
+                            <img id="skillsChart" src="" alt="Skills Match Chart" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="score-right">
+                    <div class="score-card ats-card">
+                        <h4>ATS Compatibility</h4>
+                        <div class="match-card">
+                            <div class="ats-score-number" id="atsScore">--</div>
+                            <div class="progress-bar" aria-hidden="true">
+                                <div class="progress-fill" id="atsProgress" style="width:0%"></div>
+                            </div>
+                            <p class="small-text" id="atsRecommendation"></p>
+                            <div class="chart-card" style="margin-top:12px;">
+                                <img id="atsChart" src="" alt="ATS Score Chart" style="display: none;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issues-card">
+                <h3>⚠️ ATS Issues Found</h3>
+                <div class="ats-issues" style="margin-top:12px;">
+                    <ul id="atsIssuesList"></ul>
+                </div>
+            </div>
+
+            <div class="cover-letter-section">
+                <div class="cover-letter-header">
+                    <h3>AI-Generated Cover Letter</h3>
+                    <button class="generate-cover-letter-btn" id="generateCoverLetterBtn">Generate Cover Letter</button>
+                </div>
+                <div class="cover-letter-content" id="coverLetterContent">
+                    <p id="coverLetterText"></p>
+                    <div class="cover-letter-actions">
+                        <button class="copy-btn" id="copyCoverLetterBtn">Copy to Clipboard</button>
+                        <button class="download-btn" id="downloadCoverLetterBtn">Download as Text</button>
+                    </div>
+                    <div class="success-message" id="successMessage">✓ Copied to clipboard!</div>
+                </div>
+            </div>
+
+            <div class="suggestions">
+                <h3> Improvement Suggestions</h3>
+                <ul id="suggestionsList"></ul>
+            </div>
+        </div>
+
+        <!-- Batch Results Section -->
+        <div class="results-section" id="batchResults">
+            <div class="results-header">
+                <h2>Batch Comparison Results</h2>
+                <p id="batchJobTitle"></p>
+            </div>
+
+            <div class="batch-comparison-chart" id="batchChartContainer">
+                <h3>Candidate Rankings</h3>
+                <img id="batchComparisonChart" src="" alt="Batch Comparison Chart">
+            </div>
+
+            <div class="batch-table-wrapper">
+                <table class="batch-comparison-table" id="batchComparisonTable">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Candidate Name</th>
+                            <th>Email</th>
+                            <th>Match Score</th>
+                            <th>ATS Score</th>
+                            <th>Skills Matched</th>
+                            <th>Experience</th>
+                            <th>Education</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batchTableBody">
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="batch-export-section" id="batchExportSection">
+                <h3>Export Results</h3>
+                <button class="export-btn" id="downloadCSVBtn">Download as CSV</button>
+                <button class="export-btn" id="downloadChartBtn">Download Chart</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="site-footer-inner">
+            <p>Made with care © 2026 . All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mode variables
+        let currentMode = 'single'; // 'single' or 'batch'
+        let batchFiles = [];
+
+        // Single mode elements
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const results = document.getElementById('results');
+        let selectedFile = null;
+
+        // Batch mode elements
+        const singleModeBtn = document.getElementById('singleModeBtn');
+        const batchModeBtn = document.getElementById('batchModeBtn');
+        const singleUploadMode = document.getElementById('singleUploadMode');
+        const batchUploadMode = document.getElementById('batchUploadMode');
+        const batchUploadArea = document.getElementById('batchUploadArea');
+        const batchFileInput = document.getElementById('batchFileInput');
+        const batchFileList = document.getElementById('batchFileList');
+        const batchAnalyzeBtn = document.getElementById('batchAnalyzeBtn');
+        const batchResults = document.getElementById('batchResults');
+
+        // Mode toggle
+        singleModeBtn.addEventListener('click', () => switchMode('single'));
+        batchModeBtn.addEventListener('click', () => switchMode('batch'));
+
+        function switchMode(mode) {
+            currentMode = mode;
+            if (mode === 'single') {
+                singleModeBtn.classList.add('active');
+                batchModeBtn.classList.remove('active');
+                singleUploadMode.style.display = 'block';
+                batchUploadMode.classList.remove('visible');
+                results.style.display = 'none';
+                batchResults.style.display = 'none';
+                error.style.display = 'none';
+
+                // Update navbar state
+                document.getElementById('navAnalyze').classList.add('active');
+                document.getElementById('navBatchMode').classList.remove('active');
+            } else {
+                singleModeBtn.classList.remove('active');
+                batchModeBtn.classList.add('active');
+                singleUploadMode.style.display = 'none';
+                batchUploadMode.classList.add('visible');
+                results.style.display = 'none';
+                batchResults.style.display = 'none';
+                error.style.display = 'none';
+
+                // Update navbar state
+                document.getElementById('navAnalyze').classList.remove('active');
+                document.getElementById('navBatchMode').classList.add('active');
+            }
+        }
+
+        // Navbar interaction
+        document.getElementById('navHome').addEventListener('click', (e) => {
+            e.preventDefault();
+            switchMode('single');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        document.getElementById('navAnalyze').addEventListener('click', (e) => {
+            e.preventDefault();
+            switchMode('single');
+            document.querySelector('.upload-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.getElementById('navBatchMode').addEventListener('click', (e) => {
+            e.preventDefault();
+            switchMode('batch');
+            document.querySelector('.upload-section').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // Batch file upload handlers
+        batchUploadArea.addEventListener('click', () => batchFileInput.click());
+
+        batchUploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            batchUploadArea.classList.add('dragover');
+        });
+
+        batchUploadArea.addEventListener('dragleave', () => {
+            batchUploadArea.classList.remove('dragover');
+        });
+
+        batchUploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            batchUploadArea.classList.remove('dragover');
+            handleBatchFileSelect(e.dataTransfer.files);
+        });
+
+        batchFileInput.addEventListener('change', (e) => {
+            handleBatchFileSelect(e.target.files);
+        });
+
+        function handleBatchFileSelect(files) {
+            batchFiles = [];
+            for (let file of files) {
+                if (file.type === 'application/pdf' && file.size <= 16 * 1024 * 1024) {
+                    batchFiles.push(file);
+                }
+            }
+
+            if (batchFiles.length === 0) {
+                showError('No valid PDF files selected (max 16MB each)');
+                return;
+            }
+
+            if (batchFiles.length > 20) {
+                batchFiles = batchFiles.slice(0, 20);
+                showError('Maximum 20 files allowed. Using first 20 files.');
+            }
+
+            updateBatchFileList();
+            batchAnalyzeBtn.disabled = false;
+            batchAnalyzeBtn.style.opacity = '1';
+        }
+
+        function updateBatchFileList() {
+            batchFileList.innerHTML = '';
+            batchFiles.forEach((file, index) => {
+                const item = document.createElement('div');
+                item.className = 'batch-file-item';
+                item.innerHTML = `
+                    <span>${index + 1}. ${file.name}</span>
+                    <button class="remove-file" onclick="removeBatchFile(${index})">Remove</button>
+                `;
+                batchFileList.appendChild(item);
+            });
+            batchFileList.style.display = batchFiles.length > 0 ? 'block' : 'none';
+        }
+
+        window.removeBatchFile = function (index) {
+            batchFiles.splice(index, 1);
+            updateBatchFileList();
+            if (batchFiles.length === 0) {
+                batchAnalyzeBtn.disabled = true;
+            }
+        };
+
+        batchAnalyzeBtn.addEventListener('click', async () => {
+            if (batchFiles.length === 0) return;
+
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            batchResults.style.display = 'none';
+            batchAnalyzeBtn.disabled = true;
+            batchAnalyzeBtn.textContent = '⏳ Analyzing all resumes...';
+
+            try {
+                const formData = new FormData();
+                batchFiles.forEach(file => formData.append('resumes', file));
+                formData.append('profession', document.getElementById('profession').value);
+
+                const response = await fetch('/batch-upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const error_data = await response.json();
+                    throw new Error(error_data.error || 'Batch analysis failed');
+                }
+
+                const data = await response.json();
+                displayBatchResults(data);
+
+            } catch (err) {
+                showError('Error: ' + err.message);
+                batchAnalyzeBtn.disabled = false;
+                batchAnalyzeBtn.textContent = 'Analyze All Resumes';
+            } finally {
+                loading.style.display = 'none';
+            }
+        });
+
+        function displayBatchResults(data) {
+            // Display job title
+            document.getElementById('batchJobTitle').textContent = `Analyzing ${data.total_candidates} candidates for: ${data.job_title}`;
+
+            // Display comparison chart
+            const chartImg = document.getElementById('batchComparisonChart');
+            chartImg.src = data.comparison_chart;
+            document.getElementById('batchChartContainer').classList.add('visible');
+
+            // Populate table
+            const tableBody = document.getElementById('batchTableBody');
+            tableBody.innerHTML = '';
+
+            data.batch_results.forEach(result => {
+                const row = document.createElement('tr');
+                const scoreClass = result.match_score >= 70 ? 'score-good' : result.match_score >= 50 ? 'score-warning' : 'score-poor';
+                const atsClass = result.ats_score >= 85 ? 'score-good' : result.ats_score >= 70 ? 'score-warning' : 'score-poor';
+
+                row.innerHTML = `
+                    <td><span class="rank-badge">${result.rank}</span></td>
+                    <td><strong>${result.name}</strong></td>
+                    <td>${result.email || 'N/A'}</td>
+                    <td class="${scoreClass}">${result.match_score}%</td>
+                    <td class="${atsClass}">${result.ats_score}%</td>
+                    <td>${result.matched_skills}/${result.total_skills}</td>
+                    <td>${result.experience_count} roles</td>
+                    <td>${result.education_count} degrees</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('batchComparisonTable').classList.add('visible');
+
+            // Setup export buttons
+            const csvExportUrl = data.csv_export;
+            const chartUrl = data.comparison_chart;
+
+            document.getElementById('downloadCSVBtn').onclick = () => {
+                window.location.href = csvExportUrl;
+            };
+
+            document.getElementById('downloadChartBtn').onclick = () => {
+                const link = document.createElement('a');
+                link.href = chartUrl;
+                link.download = 'batch_comparison_chart.png';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            };
+
+            document.getElementById('batchExportSection').classList.add('visible');
+
+            // Show results
+            batchResults.style.display = 'block';
+            batchResults.scrollIntoView({ behavior: 'smooth' });
+            batchAnalyzeBtn.disabled = false;
+            batchAnalyzeBtn.textContent = 'Analyze All Resumes';
+        }
+
+        // Drag and drop functionality for single mode
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFileSelect(files[0]);
+            }
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                handleFileSelect(e.target.files[0]);
+            }
+        });
+
+        function handleFileSelect(file) {
+            if (file.type !== 'application/pdf') {
+                showError('Please select a PDF file.');
+                return;
+            }
+
+            if (file.size > 16 * 1024 * 1024) { // 16MB
+                showError('File size must be less than 16MB.');
+                return;
+            }
+
+            selectedFile = file;
+            uploadArea.innerHTML = `
+                <div class="upload-icon">✅</div>
+                <div class="upload-text">${file.name}</div>
+                <div class="upload-subtext">Click to change file</div>
+            `;
+            analyzeBtn.disabled = false;
+            analyzeBtn.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)';
+        }
+
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            // Show loading
+            loading.style.display = 'block';
+            error.style.display = 'none';
+            results.style.display = 'none';
+            analyzeBtn.disabled = true;
+
+            try {
+                const formData = new FormData();
+                formData.append('resume', selectedFile);
+                formData.append('profession', document.getElementById('profession').value);
+
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+
+                displayResults(data);
+
+            } catch (err) {
+                showError(err.message);
+            } finally {
+                loading.style.display = 'none';
+                analyzeBtn.disabled = false;
+            }
+        });
+
+        function displayResults(data) {
+            // Update candidate info
+            document.getElementById('candidateName').textContent = data.name;
+            document.getElementById('candidateEmail').textContent = data.email || 'Not found';
+            document.getElementById('candidatePhone').textContent = data.phone || 'Not found';
+
+            // Update match score
+            document.getElementById('matchScore').textContent = `${data.match_score}%`;
+            // Update match progress fill (visual)
+            const matchFill = document.getElementById('matchProgress');
+            if (matchFill) { matchFill.style.width = `${data.match_score}%`; }
+
+            // Update skills
+            document.getElementById('skillsList').innerHTML = data.skills.map(skill =>
+                `<span class="skill-tag">${skill}</span>`
+            ).join('');
+
+            // Update matched skills
+            document.getElementById('matchedSkills').innerHTML = data.matched_skills.map(skill =>
+                `<span class="skill-tag matched">${skill}</span>`
+            ).join('') || '<em>No matched skills found</em>';
+
+            // Update missing skills
+            document.getElementById('missingSkills').innerHTML = data.missing_skills.map(skill =>
+                `<span class="skill-tag missing">${skill}</span>`
+            ).join('') || '<em>No missing skills identified</em>';
+
+            // Update chart
+            const chartImg = document.getElementById('skillsChart');
+            chartImg.src = data.chart_url;
+            chartImg.style.display = 'block';
+
+            // Update ATS Score
+            const atsScoreElement = document.getElementById('atsScore');
+            if (atsScoreElement) {
+                atsScoreElement.textContent = `${data.ats_score}%`;
+
+                // Apply color class based on ATS score
+                atsScoreElement.classList.remove('good', 'warning', 'poor');
+                if (data.ats_score >= 85) {
+                    atsScoreElement.classList.add('good');
+                } else if (data.ats_score >= 70) {
+                    atsScoreElement.classList.add('warning');
+                } else {
+                    atsScoreElement.classList.add('poor');
+                }
+            }
+
+            // Update ATS recommendation
+            const atsRec = document.getElementById('atsRecommendation');
+            if (atsRec) { atsRec.textContent = data.ats_recommendation; }
+
+            // Display ATS issues
+            const atsIssuesList = document.getElementById('atsIssuesList');
+            if (atsIssuesList) {
+                atsIssuesList.innerHTML = '';
+                if (data.ats_issues && data.ats_issues.length > 0) {
+                    data.ats_issues.forEach(issue => {
+                        const li = document.createElement('li');
+                        li.textContent = issue;
+                        atsIssuesList.appendChild(li);
+                    });
+                } else {
+                    const li = document.createElement('li');
+                    li.textContent = '✅ No issues found! Your resume is well-formatted.';
+                    li.style.borderLeftColor = '#2ecc71';
+                    atsIssuesList.appendChild(li);
+                }
+            }
+
+            // Display ATS chart
+            const atsChartImg = document.getElementById('atsChart');
+            if (atsChartImg && data.ats_chart_url) {
+                atsChartImg.src = data.ats_chart_url;
+                atsChartImg.style.display = 'block';
+            }
+
+            // Set ATS progress fill if present
+            const atsFill = document.getElementById('atsProgress');
+            if (atsFill) { atsFill.style.width = `${data.ats_score}%`; }
+
+            // Update suggestions
+            document.getElementById('suggestionsList').innerHTML = data.suggestions.map(suggestion =>
+                `<li>${suggestion}</li>`
+            ).join('');
+
+            // Store data globally for cover letter generation
+            window.lastResumeData = data;
+            window.lastJobData = { required_skills: data.matched_skills };
+            window.lastProfession = document.getElementById('profession').value;
+
+            // Enable cover letter button
+            document.getElementById('generateCoverLetterBtn').disabled = false;
+
+            // Show results
+            results.style.display = 'block';
+            results.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Cover Letter Generation
+        const generateCoverLetterBtn = document.getElementById('generateCoverLetterBtn');
+        const coverLetterContent = document.getElementById('coverLetterContent');
+        const copyCoverLetterBtn = document.getElementById('copyCoverLetterBtn');
+        const downloadCoverLetterBtn = document.getElementById('downloadCoverLetterBtn');
+        const successMessage = document.getElementById('successMessage');
+
+        generateCoverLetterBtn.addEventListener('click', async () => {
+            if (!window.lastResumeData) return;
+
+            generateCoverLetterBtn.disabled = true;
+            generateCoverLetterBtn.textContent = '⏳ Generating...';
+
+            try {
+                const response = await fetch('/generate-cover-letter', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        resume_data: {
+                            name: window.lastResumeData.name,
+                            email: window.lastResumeData.email,
+                            phone: window.lastResumeData.phone,
+                            skills: window.lastResumeData.skills,
+                            experience: window.lastResumeData.experience || [],
+                            education: window.lastResumeData.education || []
+                        },
+                        job_data: window.lastJobData || {},
+                        matched_skills: window.lastResumeData.matched_skills || [],
+                        profession: window.lastProfession || 'Software Development'
+                    })
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('Server response:', errorText);
+                    throw new Error(`Server error: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.error) {
+                    throw new Error(result.error);
+                }
+
+                // Display cover letter
+                document.getElementById('coverLetterText').textContent = result.cover_letter;
+                coverLetterContent.classList.add('visible');
+                generateCoverLetterBtn.textContent = '✓ Cover Letter Generated';
+                generateCoverLetterBtn.style.background = '#2ecc71';
+                generateCoverLetterBtn.disabled = true;
+
+            } catch (err) {
+                console.error('Full error:', err);
+                alert('Error generating cover letter: ' + err.message);
+                generateCoverLetterBtn.textContent = 'Generate Cover Letter';
+                generateCoverLetterBtn.disabled = false;
+                generateCoverLetterBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }
+        });
+
+        copyCoverLetterBtn.addEventListener('click', () => {
+            const coverLetterText = document.getElementById('coverLetterText').textContent;
+            navigator.clipboard.writeText(coverLetterText).then(() => {
+                successMessage.classList.add('show');
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 2000);
+            }).catch(err => {
+                alert('Failed to copy: ' + err);
+            });
+        });
+
+        downloadCoverLetterBtn.addEventListener('click', () => {
+            const coverLetterText = document.getElementById('coverLetterText').textContent;
+            const element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(coverLetterText));
+            element.setAttribute('download', `cover_letter_${window.lastResumeData.name.replace(/\s+/g, '_')}.txt`);
+            element.style.display = 'none';
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        });
+
+        function showError(message) {
+            error.textContent = message;
+            error.style.display = 'block';
+            loading.style.display = 'none';
+        }
+    </script>
+</body>
+
+</html>
