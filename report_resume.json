@@ -1,0 +1,56 @@
+{
+    "candidate_name": "Swapnil Walave",
+    "contact": {
+        "email": "swapnilwalave96@gmail.com",
+        "phone": "7499747961"
+    },
+    "match_score": 100.0,
+    "skills_analysis": {
+        "matched_skills": [
+            "python",
+            "javascript",
+            "html",
+            "css"
+        ],
+        "missing_skills": [],
+        "total_required_skills": 4,
+        "total_matched_skills": 4
+    },
+    "education": [
+        {
+            "degree": "Bachelor Of Technology In Computer Engineering",
+            "institution": "Education \n\nPimpri Chinchwad College"
+        }
+    ],
+    "experience": [
+        {
+            "position": "",
+            "company": "EXPERIENCE \n\nIcon Water Engineering",
+            "duration": "",
+            "responsibilities": [
+                "WORK EXPERIENCE \n\nIcon Water Engineering (A3 Water) \nWeb Development Intern \n\n\u2022  Built a website for the company form scratch \n\u2022  Complete design and implementation on own.",
+                "[https://github.com/swapnil-SN7/pccoe-hacktoberfest-2023] \nConducted an event for the Hacktoberfest 2023 in PCCoE to create awareness about Open Source among the students of \nPCCoE. Also created, following website for this event.",
+                "PROJECTS \n\nFull Stack ToDo  \nCreated Full Stack ToDo app which uses auth, middleware , encryption, routers concept ."
+            ]
+        }
+    ],
+    "suggestions": [
+        "Your skills match the job requirements well!",
+        "Consider adding your LinkedIn profile URL to increase credibility",
+        "Add measurable achievements with metrics to your experience descriptions"
+    ],
+    "analysis_date": "2025-10-14 22:09:54",
+    "suitable_job_recommendations": [
+        {
+            "title": "POSTION TITLE:  Intern",
+            "match_score": 57.14285714285714,
+            "key_skills": [
+                "go",
+                "react",
+                "ai",
+                "r"
+            ],
+            "description": "POSTION TITLE:  Intern \n\nRequisition Template \n\nPOSITION SUMMARY: \n\nSecurity operations team is responsible for ensure that the Confidentiality, Integrity and availability of the organization is \nalways  protected.  The  person  working  in  L1  SOC  team  operates  the  security  monitoring  solutions,  reacting  timely  to \nsecurity events as identified. The role requires working in shift schedule to cover 24/7. \n\nJOB FUNCTION AND RESPONSIBILITIES: \n\n\u25cf  Monitoring and analysis of cyber securit..."
+        }
+    ]
+}

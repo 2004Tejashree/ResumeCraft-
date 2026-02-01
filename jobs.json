@@ -1,0 +1,93 @@
+[
+    {
+      "title": "Senior Python Developer",
+      "required_skills": [
+        "Python",
+        "Django",
+        "Flask",
+        "SQL",
+        "REST APIs",
+        "Git",
+        "AWS"
+      ],
+      "experience_required": "5+ years",
+      "preferred_certifications": [
+        "AWS Certified Developer",
+        "Python Institute PCAP"
+      ],
+      "education_required": "Bachelor's in Computer Science",
+      "description": "We're looking for an experienced Python developer to join our backend team. You'll be responsible for developing and maintaining our web applications using Django and Flask, designing RESTful APIs, and deploying services on AWS."
+    },
+    {
+      "title": "Data Scientist",
+      "required_skills": [
+        "Python",
+        "Machine Learning",
+        "Pandas",
+        "Numpy",
+        "Data Visualization",
+        "SQL",
+        "Statistics"
+      ],
+      "experience_required": "3+ years",
+      "preferred_certifications": [
+        "Google Data Analytics Certificate",
+        "TensorFlow Developer Certificate"
+      ],
+      "education_required": "Master's in Data Science or related field",
+      "description": "Join our data team to build predictive models, analyze large datasets, and create data visualizations. Experience with scikit-learn and TensorFlow required."
+    },
+    {
+      "title": "Frontend Developer (React)",
+      "required_skills": [
+        "JavaScript",
+        "React",
+        "HTML",
+        "CSS",
+        "Redux",
+        "TypeScript",
+        "Responsive Design"
+      ],
+      "experience_required": "2+ years",
+      "preferred_certifications": [],
+      "education_required": "Bachelor's degree or equivalent experience",
+      "description": "We need a React developer to build user interfaces for our web applications. Experience with modern frontend tooling and state management required."
+    },
+    {
+      "title": "DevOps Engineer",
+      "required_skills": [
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "CI/CD",
+        "Terraform",
+        "Linux",
+        "Bash Scripting"
+      ],
+      "experience_required": "4+ years",
+      "preferred_certifications": [
+        "AWS Certified DevOps Engineer",
+        "Certified Kubernetes Administrator"
+      ],
+      "education_required": "Bachelor's in Computer Science or related field",
+      "description": "Looking for a DevOps engineer to automate our deployment pipelines, manage cloud infrastructure, and improve system reliability."
+    },
+    {
+      "title": "UX/UI Designer",
+      "required_skills": [
+        "Figma",
+        "Adobe XD",
+        "User Research",
+        "Wireframing",
+        "Prototyping",
+        "UI Design",
+        "UX Principles"
+      ],
+      "experience_required": "3+ years",
+      "preferred_certifications": [
+        "Google UX Design Certificate"
+      ],
+      "education_required": "Degree in Design or related field",
+      "description": "We're seeking a talented designer to create intuitive user experiences and beautiful interfaces for our digital products."
+    }
+  ]
